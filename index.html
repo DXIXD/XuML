@@ -41,7 +41,7 @@
       pointer-events: none;
     }
 
-    /* 🌟 核心修改：照片横向一排展示 + 缩小一半（171×224像素） */
+    /* 🌟 核心修改：横排自适应布局 */
     .photo-container {
       width: 100% !important;
       overflow-x: auto !important; /* 允许横向滚动 */
@@ -63,12 +63,12 @@
       width: max-content !important; /* 宽度自适应内容 */
     }
 
-    /* 🌟 照片尺寸缩小一半：342/2=171，448/2=224 像素 */
+    /* 🌟 自适应照片尺寸：保持比例，适应屏幕 */
     .photo-item {
-      width: 171px !important; /* 原342px → 缩小为171px */
-      height: 224px !important; /* 原448px → 缩小为224px */
-      max-width: 171px !important;
-      max-height: 224px !important;
+      width: auto !important; /* 自动宽度 */
+      height: 30vh !important; /* 高度占视口30%，适配不同屏幕 */
+      max-height: 400px !important; /* 最大高度 */
+      min-height: 180px !important; /* 最小高度 */
       position: relative !important;
       border-radius: 10px !important;
       overflow: hidden !important;
@@ -84,7 +84,7 @@
       left: 0 !important;
       width: 100% !important;
       height: 100% !important;
-      object-fit: cover !important;
+      object-fit: cover !important; /* 保持图片比例，覆盖容器 */
       object-position: center !important;
       transition: transform 0.3s !important;
       loading: lazy !important; /* 懒加载 */
@@ -128,7 +128,7 @@
   </style>
 
   <!-- 音乐优化库 -->
-  <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler@2.2.3/dist/howler.min.js"></script>
   <title>XuML专属小网站 ❤️</title>
 </head>
 <body>
@@ -248,35 +248,4 @@
       heart.style.top = Math.random() * 100 + 'vh';
       heart.style.animation = 'fall 3s linear';
       document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 3000);
-    }
-
-    // 照片墙（171×224像素 + 横向一排）
-    function loadPhotos() {
-      const photoCount = 4; // 可修改照片数量
-      const photoWall = document.getElementById('photoWall');
-      for (let i = 1; i <= photoCount; i++) {
-        const photoItem = document.createElement('div');
-        photoItem.className = 'photo-item';
-        const img = new Image();
-        img.loading = 'lazy'; // 懒加载
-        img.src = `https://cdn.jsdelivr.net/gh/DXIXD/XuML@main/ML${i}.jpg`;
-        img.alt = `宝宝${i}的美照`;
-        photoItem.appendChild(img);
-        photoWall.appendChild(photoItem);
-      }
-    }
-    loadPhotos();
-
-    // 飘爱心动画
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @keyframes fall {
-        0% {transform: translateY(-50px) rotate(0deg); opacity: 1;}
-        100% {transform: translateY(100vh) rotate(360deg); opacity: 0;}
-      }
-    `;
-    document.head.appendChild(style);
-  </script>
-</body>
-</html>
+      setTimeout(() =>
