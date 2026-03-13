@@ -21,11 +21,10 @@
       background-repeat: no-repeat !important;
       background-size: cover !important;
       min-height: 100vh;
-      /* 🌟 关键修改：背景图尺寸调大 (200px)，透明度降低 (0.15)，更清爽 */
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff66b3' opacity='0.15'%3E%3Cpath d='M12,2c-1.1,0-2,0.9-2,2c0,1.1 0.9,2 2,2c1.1,0 2-0.9 2-2C14,2.9 13.1,2 12,2z M12,4c-0.6,0-1-0.4-1-1s0.4-1 1-1s1,0.4 1,1S12.6,4 12,4z M12,6c-1.7,0-3,1.3-3,3c0,1.8 1.9,3.5 3.5,5.3c0.2,0.2 0.4,0.3 0.5,0.3c0.1,0 0.3-0.1 0.5-0.3C17.1,12.5 19,10.8 19,9C19,7.3 17.7,6 16,6c-0.6,0-1,0.4-1,1s0.4,1 1,1c1.1,0 2,0.9 2,2c0,1.1-1.1,1.9-3.1,3.7c-1.1,1-2.1,1.9-2.1,1.9s-1-0.9-2.1-1.9C8.1,12.1 7,11.1 7,10c0-1.1,0.9-2 2-2c0.6,0 1-0.4 1-1s-0.4-1-1-1c-1.7,0-3,1.3-3,3c0,0.3 0.1,0.5 0.2,0.7c0.5,0.8 1.3,1.5 2.3,2.3c1.3,1.1 2.5,2.1 2.5,2.1l-0.6,0.6c-0.4,0.4-0.4,1,0,1.4c0.2,0.2 0.5,0.3 0.7,0.3s0.5-0.1 0.7-0.3l0.6-0.6l0.6,0.6c0.2,0.2 0.5,0.3 0.7,0.3s0.5-0.1 0.7-0.3c0.4-0.4 0.4-1,0-1.4l-0.6-0.6s1.2-1,2.5-2.1c1-0.8 1.8-1.5 2.3-2.3c0.1-0.2 0.2-0.4 0.2-0.7C20,9.3 18.7,8 17,8c-0.6,0-1-0.4-1-1s0.4-1 1-1c1.7,0 3,1.3 3,3C20,11.4 18.2,13.2 16,15.2c-0.4,0.4-0.8,0.7-1.2,1c-0.3,0.2-0.6,0.4-0.8,0.6c-0.2,0.1-0.3,0.2-0.5,0.2s0.3-0.1,0.5-0.2c0.2-0.1,0.5-0.3,0.8-0.6c0.4-0.3,0.8-0.7,1.2-1C9.8,13.2 8,11.4 8,9c0-1.7,1.3-3 3-3z'%3E%3C/path%3E%3C/svg%3E");
       background-attachment: fixed !important;
       background-repeat: repeat !important;
-      background-size: 200px !important; /* 👈 调大尺寸，减少密度 */
+      background-size: 200px !important;
       position: relative !important;
       z-index: 1 !important;
     }
@@ -42,41 +41,41 @@
       pointer-events: none;
     }
 
-    /* 🌟 核心修改：横排自适应布局 */
+    /* 横排自适应布局 */
     .photo-container {
       width: 100% !important;
-      overflow-x: auto !important; /* 允许横向滚动 */
+      overflow-x: auto !important;
       padding: 10px 0 !important;
-      -webkit-overflow-scrolling: touch !important; /* 移动端顺滑滚动 */
-      scrollbar-width: none !important; /* 隐藏滚动条（Firefox） */
+      -webkit-overflow-scrolling: touch !important;
+      scrollbar-width: none !important;
     }
     .photo-container::-webkit-scrollbar {
-      display: none !important; /* 隐藏滚动条（Chrome/Safari） */
+      display: none !important;
     }
 
     .photo-wall {
       display: flex !important;
-      flex-wrap: nowrap !important; /* 不换行，强制一排 */
-      gap: 15px !important; /* 照片之间的间距 */
+      flex-wrap: nowrap !important;
+      gap: 15px !important;
       padding: 0 20px !important;
-      justify-content: flex-start !important; /* 从左到右排列 */
+      justify-content: flex-start !important;
       align-items: center !important;
-      width: max-content !important; /* 宽度自适应内容 */
+      width: max-content !important;
     }
 
-    /* 🌟 自适应照片尺寸：保持比例，适应屏幕 */
+    /* 自适应照片尺寸 */
     .photo-item {
-      width: auto !important; /* 自动宽度 */
-      height: 30vh !important; /* 高度占视口30%，适配不同屏幕 */
-      max-height: 400px !important; /* 最大高度 */
-      min-height: 180px !important; /* 最小高度 */
+      width: auto !important;
+      height: 30vh !important;
+      max-height: 400px !important;
+      min-height: 180px !important;
       position: relative !important;
       border-radius: 10px !important;
       overflow: hidden !important;
       box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important;
       border: 2px solid #ff99cc !important;
       background: transparent !important;
-      flex-shrink: 0 !important; /* 禁止照片被压缩 */
+      flex-shrink: 0 !important;
     }
 
     .photo-item img {
@@ -85,10 +84,10 @@
       left: 0 !important;
       width: 100% !important;
       height: 100% !important;
-      object-fit: cover !important; /* 保持图片比例，覆盖容器 */
+      object-fit: cover !important;
       object-position: center !important;
       transition: transform 0.3s !important;
-      loading: lazy !important; /* 懒加载 */
+      loading: lazy !important;
     }
 
     .photo-item img:hover {
@@ -141,7 +140,7 @@
   <div class="countdown">
     <h2 class="text-pink">我们在一起已经</h2>
     <div style="font-size: 40px; color: #ff3399; font-weight: bold;" id="days">0 天</div>
-    <p class="text-grey">距离下一个纪念日还有：<span id="nextDay">0 天</span></p>
+    <!-- 移除了「距离下一个纪念日」的显示行 -->
   </div>
 
   <div class="words">
@@ -152,7 +151,7 @@
     <button class="cu-btn bg-pink margin-top" onclick="changeWord()">换一句❤️</button>
   </div>
 
-  <!-- 🌟 新增容器：实现横向滚动 -->
+  <!-- 横排滚动照片墙 -->
   <div style="margin: 20px;">
     <h3 class="text-white" style="text-shadow: 0 2px 4px rgba(0,0,0,0.2);"><span class="cuIcon-camerafill"></span> 我的专属小可爱</h3>
     <div class="photo-container">
@@ -207,28 +206,77 @@
     }
     window.onload = initMusic;
 
-    // 🌟 日期修正逻辑
-    // 请修改这里的日期为你们的真实日期 (年份, 月份-1, 日期)
-    // 例如 2025年10月1日 -> new Date(2025, 9, 1)
-    const loveStart = new Date(2025, 3, 24); // 👈 修改这里！
-    const nextMemorial = new Date(2026, 3, 24); // 👈 修改下一个纪念日！
+    // 倒计时功能（仅保留恋爱天数计算）
+    // 请修改这里的日期为你们的真实恋爱起始日期 (年份, 月份-1, 日期)
+    const loveStart = new Date(2025, 3, 24); 
 
     function calcDays() {
       const now = new Date();
-      
       // 计算恋爱总天数（确保不会出现负数）
       const diff = now - loveStart;
       const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
       document.getElementById('days').innerText = days + ' 天';
-
-      // 计算下一个纪念日
-      const nextDiff = nextMemorial - now;
-      const nextDays = Math.max(0, Math.floor(nextDiff / (1000 * 60 * 60 * 24)));
-      document.getElementById('nextDay').innerText = nextDays + ' 天';
+      // 移除了下一个纪念日的计算逻辑
     }
     calcDays();
     setInterval(calcDays, 1000);
 
     // 暖心语录
     const wordList = [
-      "宝宝，你是我见过
+      "宝宝，你是我见过最温柔的女孩子～",
+      "不管发生什么，我都会永远陪着你 ❤️",
+      "今天的你也超可爱，好想抱抱你～",
+      "我的宝宝，不许不开心哦～",
+      "赚钱给你花，把你宠成小公主～",
+      "遇见你，花光了我所有的运气～"
+    ];
+    function changeWord() {
+      const randomIndex = Math.floor(Math.random() * wordList.length);
+      document.getElementById('wordList').innerHTML = `<p>${wordList[randomIndex]}</p>`;
+    }
+
+    // 惊喜弹窗+飘爱心
+    function surprise() {
+      alert(`❤️ 宝宝！\n我对你的爱，比天上的星星还多～\n这辈子只爱你一个人～`);
+      const heart = document.createElement('div');
+      heart.style.position = 'fixed';
+      heart.style.color = 'red';
+      heart.style.fontSize = '30px';
+      heart.style.zIndex = '9999';
+      heart.innerText = '❤️';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.top = Math.random() * 100 + 'vh';
+      heart.style.animation = 'fall 3s linear';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 3000);
+    }
+
+    // 加载照片墙
+    function loadPhotos() {
+      const photoCount = 4; // 可修改照片数量
+      const photoWall = document.getElementById('photoWall');
+      for (let i = 1; i <= photoCount; i++) {
+        const photoItem = document.createElement('div');
+        photoItem.className = 'photo-item';
+        const img = new Image();
+        img.loading = 'lazy';
+        img.src = `https://cdn.jsdelivr.net/gh/DXIXD/XuML@main/ML${i}.jpg`;
+        img.alt = `宝宝${i}的美照`;
+        photoItem.appendChild(img);
+        photoWall.appendChild(photoItem);
+      }
+    }
+    loadPhotos();
+
+    // 飘爱心动画
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes fall {
+        0% {transform: translateY(-50px) rotate(0deg); opacity: 1;}
+        100% {transform: translateY(100vh) rotate(360deg); opacity: 0;}
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
