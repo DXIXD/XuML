@@ -28,34 +28,31 @@
       z-index: -1;
     }
 
-    /* 核心：照片墙样式修改 - 双排并列+4:3比例+人物居中 */
     .photo-wall {
       display: flex;
       flex-wrap: wrap;
-      gap: 15px; /* 照片之间的间距 */
+      gap: 15px;
       padding: 20px;
-      justify-content: center; /* 整体居中 */
+      justify-content: center;
     }
     .photo-item {
-      width: calc(50% - 7.5px); /* 双排并列：50%宽度 - 一半间距 */
+      width: calc(50% - 7.5px); /* 双排并列 */
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       border: 3px solid;
       border-image: linear-gradient(to right, #ff99cc, #ff66b3) 1;
-      /* 4:3比例核心：padding-top 计算方式 3/4=75% */
-      padding-top: 75%; 
-      position: relative; /* 让图片绝对定位 */
+      padding-top: 75%; /* 4:3 比例 */
+      position: relative;
     }
     .photo-item img {
-      /* 人物自适应居中核心样式 */
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover; /* 保持比例，裁剪多余部分 */
-      object-position: center; /* 人物居中显示 */
+      object-fit: cover;
+      object-position: center; /* 人物居中 */
       transition: transform 0.3s;
     }
     .photo-item img:hover {
@@ -127,7 +124,7 @@
   <div class="words">
     <h3 class="text-purple"><span class="cuIcon-heartfill text-red"></span> 想对你说的话</h3>
     <div id="wordList" style="margin-top: 10px;">
-      <p>宝贝，你笑起来的时候，整个世界都亮了～</p>
+      <p>不管发生什么，我都会永远陪着你 ❤️</p>
     </div>
     <button class="cu-btn bg-pink margin-top" onclick="changeWord()">换一句❤️</button>
   </div>
@@ -144,14 +141,14 @@
     <p style="margin-top: 10px;">宝宝：</p>
     <p>遇见你是我这辈子最幸运的事，我真的超爱你～</p>
     <p>愿我们永远在一起，每天都开开心心的～</p>
-    <p style="text-align: right; margin-top: 20px;">爱你的DuanYH ❤️</p>
+    <p style="text-align: right; margin-top: 20px;">爱你的XX ❤️</p>
   </div>
 
   <button class="btn-heart" onclick="surprise()">点击领取专属惊喜 💖</button>
 
   <audio autoplay loop style="display: none;">
     <source src="./暖风.mp3" type="audio/mpeg">
-  </audio>
+  
 
   <script>
     const loveStart = new Date(2025, 3, 24);
@@ -198,14 +195,15 @@
       setTimeout(() => heart.remove(), 3000);
     }
 
-    // 加载照片墙（4张照片，双排并列展示）
+    // 加载照片墙（使用jsDelivr CDN加速，加载速度更快）
     function loadPhotos() {
       const photoCount = 4;
       let html = '';
       for (let i = 1; i <= photoCount; i++) {
+        // 🌟 关键：使用jsDelivr加速GitHub图片
         html += `
           <div class="photo-item">
-            <img src="./ML${i}.jpg" alt="宝宝的美照${i}">
+            <img src="https://cdn.jsdelivr.net/gh/DXIXD/XuML@main/ML${i}.jpg" alt="宝宝的美照${i}">
           </div>
         `;
       }
