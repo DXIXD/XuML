@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 引入ColorUI样式（颜值核心） -->
+  <link rel="stylesheet" href="./colorui/main.css">
+  <link rel="stylesheet" href="./colorui/icon.css">
+  <!-- 自定义一点点样式（适配网页） -->
+  <style>
+    /* 全局样式 */
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--gradualPink); /* 粉色渐变背景，可换：gradualBlue/gradualGreen */
+      min-height: 100vh;
+    }
+    /* 照片墙样式 */
+    .photo-wall {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 20px;
+    }
+    .photo-item {
+      width: calc(33.33% - 10px);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .photo-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .photo-item img:hover {
+      transform: scale(1.05); /* 鼠标移上去放大，有互动感 */
+    }
+    /* 倒计时样式 */
+    .countdown {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    /* 告白信样式 */
+    .letter {
+      background: white;
+      margin: 20px;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      line-height: 1.8;
+    }
+    /* 暖心语录样式 */
+    .words {
+      background: white;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    /* 按钮样式 */
+    .btn-heart {
+      display: block;
+      width: 80%;
+      margin: 20px auto;
+      padding: 15px;
+      background: var(--gradualRed);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+  </style>
+  <title>XuML专属小网站 ❤️</title>
+</head>
+<body>
+  <!-- 顶部标题 -->
+  <div style="text-align: center; padding: 30px 0; color: white;">
+    <h1 style="margin: 0; font-size: 30px;">❤️ 我的宝宝，全世界最可爱 ❤️</h1>
+    <p style="font-size: 18px; margin-top: 10px;">今天也是超爱你的一天～</p>
+  </div>
+
+  <!-- 倒计时模块（在一起的天数） -->
+  <div class="countdown">
+    <h2 class="text-pink">我们在一起已经</h2>
+    <div style="font-size: 40px; color: var(--red); font-weight: bold;" id="days">0 天</div>
+    <p class="text-grey">距离下一个纪念日还有：<span id="nextDay">0 天</span></p>
+  </div>
+
+  <!-- 暖心语录 -->
+  <div class="words">
+    <h3 class="text-purple"><span class="cuIcon-heartfill text-red"></span> 想对你说的话</h3>
+    <div id="wordList" style="margin-top: 10px;">
+      <p>宝贝，你笑起来的时候，整个世界都亮了～</p>
+    </div>
+    <button class="cu-btn bg-pink margin-top" onclick="changeWord()">换一句❤️</button>
+  </div>
+
+  <!-- 照片墙 -->
+  <div style="margin: 20px;">
+    <h3 class="text-white"><span class="cuIcon-camerafill"></span> 我的专属小可爱</h3>
+    <div class="photo-wall" id="photoWall">
+      <!-- 照片会在这里显示，下面先加一张示例 -->
+      <div class="photo-item">
+        <img src="./images/1.jpg" alt="宝贝的照片">
+      </div>
+    </div>
+  </div>
+
+  <!-- 告白信 -->
+  <div class="letter">
+    <h3 class="text-red"><span class="cuIcon-writefill"></span> 给宝贝的告白信</h3>
+    <p style="margin-top: 10px;">宝宝：</p>
+    <p>遇见你是我这辈子最幸运的事，我真的超爱你～</p>
+    <p>愿我们永远在一起，每天都开开心心的～</p>
+    <p style="text-align: right; margin-top: 20px;">爱你的XX ❤️</p>
+  </div>
+
+  <!-- 互动按钮（点击有惊喜） -->
+  <button class="btn-heart" onclick="surprise()">点击领取专属惊喜 💖</button>
+
+  <!-- 音乐（可选，自动播放温柔音乐） -->
+  <audio autoplay loop style="display: none;">
+    <source src="/music/暖风.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- 核心脚本（倒计时+语录切换+惊喜） -->
+  <script>
+    // **************************
+    // 第一步：修改这里的纪念日！！！
+    // 格式：年, 月-1, 日（比如2022年5月20日 → 2022,4,20）
+    const loveStart = new Date(2025, 3, 24); 
+    // 下一个纪念日（比如2024年5月20日）
+    const nextMemorial = new Date(2023, 3, 24);
+    // **************************
+
+    // 1. 计算在一起的天数
+    function calcDays() {
+      const now = new Date();
+      // 计算相差的毫秒数 → 转天数
+      const diff = now - loveStart;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      document.getElementById('days').innerText = days + ' 天';
+      
+      // 计算下一个纪念日
+      const nextDiff = nextMemorial - now;
+      const nextDays = Math.max(0, Math.floor(nextDiff / (1000 * 60 * 60 * 24)));
+      document.getElementById('nextDay').innerText = nextDays + ' 天';
+    }
+    calcDays();
+    setInterval(calcDays, 1000); // 每秒更新
+
+    // 2. 暖心语录列表（修改/添加你想对她说的话）
+    const wordList = [
+      "宝宝，你是我见过最温柔的女孩子～",
+      "不管发生什么，我都会永远陪着你 ❤️",
+      "今天的你也超可爱，好想抱抱你～",
+      "我的宝宝，不许不开心哦～",
+      "赚钱给你花，把你宠成小公主～",
+      "遇见你，花光了我所有的运气～"
+    ];
+    // 切换语录
+    function changeWord() {
+      const randomIndex = Math.floor(Math.random() * wordList.length);
+      document.getElementById('wordList').innerHTML = `<p>${wordList[randomIndex]}</p>`;
+    }
+
+    // 3. 惊喜弹窗（点击按钮触发）
+    function surprise() {
+      alert(`❤️ 宝贝！\n我对你的爱，比天上的星星还多～\n这辈子只爱你一个人～`);
+      // 可选：加个特效，比如页面飘爱心（不用改）
+      const heart = document.createElement('div');
+      heart.style.position = 'fixed';
+      heart.style.color = 'red';
+      heart.style.fontSize = '30px';
+      heart.style.zIndex = '9999';
+      heart.innerText = '❤️';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.top = Math.random() * 100 + 'vh';
+      heart.style.animation = 'fall 3s linear';
+      document.body.appendChild(heart);
+      // 3秒后移除爱心
+      setTimeout(() => heart.remove(), 3000);
+    }
+
+    // 4. 加载照片墙（把你的照片放到images文件夹，命名为1.jpg、2.jpg...）
+    function loadPhotos() {
+      const photoCount = 4; // 你有几张照片就改几（比如8张就写8）
+      let html = '';
+      for (let i = 1; i <= photoCount; i++) {
+        html += `
+          <div class="photo-item">
+            <img src="./images/${i}.jpg" alt="宝贝的美照${i}">
+          </div>
+        `;
+      }
+      document.getElementById('photoWall').innerHTML = html;
+    }
+    loadPhotos();
+
+    // 加个飘爱心的动画（不用改）
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes fall {
+        0% {transform: translateY(-50px) rotate(0deg); opacity: 1;}
+        100% {transform: translateY(100vh) rotate(360deg); opacity: 0;}
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
