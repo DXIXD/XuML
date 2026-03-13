@@ -41,41 +41,35 @@
       pointer-events: none;
     }
 
-    /* 横排自适应布局 */
+    /* 🌟 核心修改：横排等分布局（删除自适应） */
     .photo-container {
       width: 100% !important;
-      overflow-x: auto !important;
       padding: 10px 0 !important;
-      -webkit-overflow-scrolling: touch !important;
-      scrollbar-width: none !important;
-    }
-    .photo-container::-webkit-scrollbar {
-      display: none !important;
+      margin: 0 auto !important;
     }
 
+    /* 等分布局：flex 自动均分宽度 */
     .photo-wall {
       display: flex !important;
-      flex-wrap: nowrap !important;
-      gap: 15px !important;
+      flex-wrap: wrap !important; /* 超出自动换行，保证等分 */
+      gap: 15px !important; /* 照片间距 */
       padding: 0 20px !important;
-      justify-content: flex-start !important;
-      align-items: center !important;
-      width: max-content !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
     }
 
-    /* 自适应照片尺寸 */
+    /* 🌟 等分展示：宽度均分，固定比例 */
     .photo-item {
-      width: auto !important;
-      height: 30vh !important;
-      max-height: 400px !important;
-      min-height: 180px !important;
+      flex: 1 !important; /* 关键：自动等分宽度 */
+      min-width: 120px !important; /* 最小宽度，防止过窄 */
+      max-width: calc(25% - 15px) !important; /* 4张图等分（25% - 间距），可根据数量调整 */
+      aspect-ratio: 3/4 !important; /* 固定比例 3:4（原342:448） */
       position: relative !important;
       border-radius: 10px !important;
       overflow: hidden !important;
       box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important;
       border: 2px solid #ff99cc !important;
       background: transparent !important;
-      flex-shrink: 0 !important;
     }
 
     .photo-item img {
@@ -84,7 +78,7 @@
       left: 0 !important;
       width: 100% !important;
       height: 100% !important;
-      object-fit: cover !important;
+      object-fit: cover !important; /* 保持比例 */
       object-position: center !important;
       transition: transform 0.3s !important;
       loading: lazy !important;
@@ -150,7 +144,7 @@
     <button class="cu-btn bg-pink margin-top" onclick="changeWord()">换一句❤️</button>
   </div>
 
-  <!-- 横排滚动照片墙 -->
+  <!-- 横排等分照片墙 -->
   <div style="margin: 20px;">
     <h3 class="text-white" style="text-shadow: 0 2px 4px rgba(0,0,0,0.2);"><span class="cuIcon-camerafill"></span> 我的专属小可爱</h3>
     <div class="photo-container">
@@ -246,11 +240,42 @@
       setTimeout(() => heart.remove(), 3000);
     }
 
-    // 🌟 核心修复：照片加载优化（不删图，100%稳定）
+    // 加载照片（使用你自己的图片链接，不删除）
     function loadPhotos() {
-      const photoCount = 4;
+      const photoCount = 4; // 4张图等分，可修改数量
       const photoWall = document.getElementById('photoWall');
-      photoWall.innerHTML = ''; // 清空
+      photoWall.innerHTML = '';
 
       for (let i = 1; i <= photoCount; i++) {
         const photoItem = document.createElement('div');
+        photoItem.className = 'photo-item';
+        
+        const img = new Image();
+        img.loading = 'lazy';
+        // 你的原图链接，完全保留
+        img.src = `https://raw.githubusercontent.com/DXIXD/XuML/main/ML${i}.jpg`;
+        img.alt = `宝宝${i}的美照`;
+        
+        // 加载失败兜底（可选）
+        img.onerror = function() {
+          this.src = `https://picsum.photos/seed/ml${i}/342/448`; // 仅兜底，不替换你的图
+        };
+        
+        photoItem.appendChild(img);
+        photoWall.appendChild(photoItem);
+      }
+    }
+    loadPhotos();
+
+    // 飘爱心动画
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes fall {
+        0% {transform: translateY(-50px) rotate(0deg); opacity: 1;}
+        100% {transform: translateY(100vh) rotate(360deg); opacity: 0;}
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
