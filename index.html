@@ -30,32 +30,29 @@
       z-index: -1;
     }
 
-    /* 🌟 核心修复：照片墙双列排布 */
+    /* 🌟 照片墙改成：单列 + 1:1 正方形 + 居中 */
     .photo-wall {
-      display: flex !important; /* 强制flex */
-      flex-wrap: wrap !important; /* 强制换行 */
-      gap: 15px !important; /* 间距 */
+      display: flex !important;
+      flex-wrap: nowrap !important; /* 不换行 */
+      flex-direction: column !important; /* 单列排列 */
+      gap: 20px !important;
       padding: 20px !important;
-      justify-content: center !important;
-      width: 100% !important; /* 确保容器宽度 */
-      box-sizing: border-box !important; /* 关键：防止padding撑大 */
+      align-items: center !important; /* 水平居中 */
     }
-    
-    /* 🌟 关键：双列宽度（每行2张） */
+
+    /* 🌟 1:1 正方形照片（核心比例 1:1） */
     .photo-item {
-      width: calc(50% - 7.5px) !important; /* 50%宽度 - 一半间距 */
-      max-width: calc(50% - 7.5px) !important;
+      width: 80% !important; /* 控制宽度，可改100%/70% */
+      max-width: 300px !important; /* 最大宽度限制 */
+      padding-top: 80% !important; /* 1:1 比例 = 100% */
+      position: relative !important;
       border-radius: 10px !important;
       overflow: hidden !important;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-      border: 3px solid !important;
-      border-image: linear-gradient(to right, #ff99cc, #ff66b3) 1 !important;
-      padding-top: 75% !important; /* 4:3比例 */
-      position: relative !important;
-      background: transparent !important; /* 清除白色背景 */
-      margin-bottom: 15px !important; /* 底部间距 */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important;
+      border: 2px solid #ff99cc !important;
+      background: transparent !important;
     }
-    
+
     .photo-item img {
       position: absolute !important;
       top: 0 !important;
@@ -66,12 +63,12 @@
       object-position: center !important;
       transition: transform 0.3s !important;
     }
-    
+
     .photo-item img:hover {
       transform: scale(1.05) !important;
     }
 
-    /* 其他样式不变... */
+    /* 其他模块样式保持不变 */
     .countdown, .words, .letter {
       background: rgba(255, 255, 255, 0.9) !important;
       border: 2px solid !important;
@@ -95,12 +92,16 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
       transition: all 0.3s !important;
     }
-    
+
     .btn-heart:hover {
       transform: scale(1.05) !important;
       box-shadow: 0 6px 12px rgba(0,0,0,0.3) !important;
     }
   </style>
+
+  <!-- 音乐播放优化库：Howler.js -->
+  <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js"></script>
+
   <title>XuML专属小网站 ❤️</title>
 </head>
 <body>
@@ -139,11 +140,55 @@
 
   <button class="btn-heart" onclick="surprise()">点击领取专属惊喜 💖</button>
 
-  <audio autoplay loop style="display: none;">
-    <source src="./暖风.mp3" type="audio/mpeg">
-  
-
   <script>
+    // ======================== 音乐播放优化（流畅不卡顿） ========================
+    let isAudioLoaded = false;
+
+    function isHighLatency() {
+      return navigator.connection && navigator.connection.effectiveType === '2g';
+    }
+
+    function initMusic() {
+      if (isHighLatency()) {
+        console.log('当前网络环境不佳，已自动屏蔽背景音乐。');
+        return;
+      }
+      try {
+        const musicUrl = "https://cdn.jsdelivr.net/gh/DXIXD/XuML@main/%E6%9A%96%E9%A3%8E.mp3";
+        const sound = new Howl({
+          src: [musicUrl],
+          html5: true,
+          volume: 0.6,
+          loop: true,
+          preload: true,
+          onload: function() {
+            isAudioLoaded = true;
+          },
+          onloaderror: function() {
+            fallbackAudio();
+          }
+        });
+
+        document.addEventListener('click', function() {
+          if (isAudioLoaded) sound.play();
+          else sound.once('load', () => sound.play());
+        }, { once: true });
+      } catch (e) {
+        fallbackAudio();
+      }
+    }
+
+    function fallbackAudio() {
+      const audio = new Audio("https://cdn.jsdelivr.net/gh/DXIXD/XuML@main/%E6%9A%96%E9%A3%8E.mp3");
+      audio.loop = true;
+      audio.volume = 0.6;
+      audio.preload = "auto";
+      document.addEventListener('click', () => audio.play().catch(() => {}), { once: true });
+    }
+
+    window.onload = initMusic;
+
+    // ======================== 原有功能 ========================
     const loveStart = new Date(2025, 3, 24);
     const nextMemorial = new Date(2026, 3, 24);
 
@@ -152,7 +197,7 @@
       const diff = now - loveStart;
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       document.getElementById('days').innerText = days + ' 天';
-      
+
       const nextDiff = nextMemorial - now;
       const nextDays = Math.max(0, Math.floor(nextDiff / (1000 * 60 * 60 * 24)));
       document.getElementById('nextDay').innerText = nextDays + ' 天';
@@ -188,14 +233,14 @@
       setTimeout(() => heart.remove(), 3000);
     }
 
-    // 加载照片墙（双列展示）
+    // 加载照片墙（单列 + 1:1 比例）
     function loadPhotos() {
-      const photoCount = 4; // 4张照片，刚好2行
+      const photoCount = 4; // 你可以改成1/2/3/5张，都会自动排成单列
       let html = '';
       for (let i = 1; i <= photoCount; i++) {
         html += `
           <div class="photo-item">
-            <img src="https://cdn.jsdelivr.net/gh/DXIXD/XuML@main/ML${i}.jpg" alt="宝宝的美照${i}">
+            <img src="https://cdn.jsdelivr.net/gh/DXIXD/XuML@main/ML${i}.jpg" alt="宝宝${i}">
           </div>
         `;
       }
@@ -207,10 +252,4 @@
     style.innerHTML = `
       @keyframes fall {
         0% {transform: translateY(-50px) rotate(0deg); opacity: 1;}
-        100% {transform: translateY(100vh) rotate(360deg); opacity: 0;}
-      }
-    `;
-    document.head.appendChild(style);
-  </script>
-</body>
-</html>
+        100% {transform: translateY(1
