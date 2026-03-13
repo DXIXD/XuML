@@ -3,92 +3,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- 引入ColorUI样式（路径适配根目录） -->
   <link rel="stylesheet" href="./colorui/main.css">
   <link rel="stylesheet" href="./colorui/icon.css">
-  <!-- 自定义样式（保留原有） -->
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: var(--gradualPink);
+      background: linear-gradient(135deg, #ffccd5 0%, #fcb6d0 30%, #f8a0c8 60%, #f189bf 100%);
       min-height: 100vh;
+      background-image: url("https://img.icons8.com/fluency/96/000000/tulip.png");
+      background-repeat: repeat;
+      background-size: 60px;
+      background-attachment: fixed;
+      position: relative;
     }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.15);
+      z-index: -1;
+    }
+
+    /* 核心：照片墙样式修改 - 双排并列+4:3比例+人物居中 */
     .photo-wall {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 15px; /* 照片之间的间距 */
       padding: 20px;
+      justify-content: center; /* 整体居中 */
     }
     .photo-item {
-      width: calc(33.33% - 10px);
+      width: calc(50% - 7.5px); /* 双排并列：50%宽度 - 一半间距 */
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border: 3px solid;
+      border-image: linear-gradient(to right, #ff99cc, #ff66b3) 1;
+      /* 4:3比例核心：padding-top 计算方式 3/4=75% */
+      padding-top: 75%; 
+      position: relative; /* 让图片绝对定位 */
     }
     .photo-item img {
+      /* 人物自适应居中核心样式 */
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 150px;
-      object-fit: cover;
+      height: 100%;
+      object-fit: cover; /* 保持比例，裁剪多余部分 */
+      object-position: center; /* 人物居中显示 */
       transition: transform 0.3s;
     }
     .photo-item img:hover {
       transform: scale(1.05);
     }
+
     .countdown {
-      background: white;
+      background: rgba(255, 255, 255, 0.85);
       padding: 20px;
       border-radius: 10px;
       margin: 20px;
       text-align: center;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border: 2px solid;
+      border-image: linear-gradient(to bottom, #ff99cc, #ff66b3) 1;
     }
     .letter {
-      background: white;
+      background: rgba(255, 255, 255, 0.85);
       margin: 20px;
-      padding: 30px;
+      padding: 20px 30px;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       line-height: 1.8;
+      border: 2px solid;
+      border-image: linear-gradient(to bottom, #ff99cc, #ff66b3) 1;
     }
     .words {
-      background: white;
+      background: rgba(255, 255, 255, 0.85);
       margin: 20px;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border: 2px solid;
+      border-image: linear-gradient(to bottom, #ff99cc, #ff66b3) 1;
     }
     .btn-heart {
       display: block;
       width: 80%;
       margin: 20px auto;
       padding: 15px;
-      background: var(--gradualRed);
+      background: linear-gradient(to right, #ff66b3, #ff3399);
       color: white;
       border: none;
       border-radius: 50px;
       font-size: 18px;
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: all 0.3s;
+    }
+    .btn-heart:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
     }
   </style>
   <title>XuML专属小网站 ❤️</title>
 </head>
 <body>
-  <!-- 顶部标题 -->
-  <div style="text-align: center; padding: 30px 0; color: white;">
+  <div style="text-align: center; padding: 30px 0; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
     <h1 style="margin: 0; font-size: 30px;">❤️ 我的宝宝，全世界最可爱 ❤️</h1>
     <p style="font-size: 18px; margin-top: 10px;">今天也是超爱你的一天～</p>
   </div>
 
-  <!-- 倒计时模块 -->
   <div class="countdown">
     <h2 class="text-pink">我们在一起已经</h2>
-    <div style="font-size: 40px; color: var(--red); font-weight: bold;" id="days">0 天</div>
+    <div style="font-size: 40px; color: #ff3399; font-weight: bold;" id="days">0 天</div>
     <p class="text-grey">距离下一个纪念日还有：<span id="nextDay">0 天</span></p>
   </div>
 
-  <!-- 暖心语录 -->
   <div class="words">
     <h3 class="text-purple"><span class="cuIcon-heartfill text-red"></span> 想对你说的话</h3>
     <div id="wordList" style="margin-top: 10px;">
@@ -97,48 +132,37 @@
     <button class="cu-btn bg-pink margin-top" onclick="changeWord()">换一句❤️</button>
   </div>
 
-  <!-- 照片墙（修正示例图片路径） -->
   <div style="margin: 20px;">
-    <h3 class="text-white"><span class="cuIcon-camerafill"></span> 我的专属小可爱</h3>
+    <h3 class="text-white" style="text-shadow: 0 2px 4px rgba(0,0,0,0.2);"><span class="cuIcon-camerafill"></span> 我的专属小可爱</h3>
     <div class="photo-wall" id="photoWall">
-      <!-- 示例图片适配实际文件名 -->
-      <div class="photo-item">
-        <img src="./ML1.jpg" alt="宝贝的照片">
-      </div>
+      <!-- 示例占位，脚本会自动生成 -->
     </div>
   </div>
 
-  <!-- 告白信 -->
   <div class="letter">
     <h3 class="text-red"><span class="cuIcon-writefill"></span> 给宝贝的告白信</h3>
     <p style="margin-top: 10px;">宝宝：</p>
     <p>遇见你是我这辈子最幸运的事，我真的超爱你～</p>
     <p>愿我们永远在一起，每天都开开心心的～</p>
-    <p style="text-align: right; margin-top: 20px;">爱你的XX ❤️</p>
+    <p style="text-align: right; margin-top: 20px;">爱你的DuanYH ❤️</p>
   </div>
 
-  <!-- 互动按钮 -->
   <button class="btn-heart" onclick="surprise()">点击领取专属惊喜 💖</button>
 
-  <!-- 音乐（修正路径，适配根目录） -->
   <audio autoplay loop style="display: none;">
     <source src="./暖风.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- 核心脚本 -->
   <script>
-    // 第一步：修改纪念日（格式：年, 月-1, 日）
-    const loveStart = new Date(2025, 3, 24); // 2025年4月24日
-    const nextMemorial = new Date(2026, 3, 24); // 下一个纪念日（2026年4月24日）
+    const loveStart = new Date(2025, 3, 24);
+    const nextMemorial = new Date(2026, 3, 24);
 
-    // 1. 计算在一起的天数
     function calcDays() {
       const now = new Date();
       const diff = now - loveStart;
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       document.getElementById('days').innerText = days + ' 天';
       
-      // 计算下一个纪念日（避免负数）
       const nextDiff = nextMemorial - now;
       const nextDays = Math.max(0, Math.floor(nextDiff / (1000 * 60 * 60 * 24)));
       document.getElementById('nextDay').innerText = nextDays + ' 天';
@@ -146,7 +170,6 @@
     calcDays();
     setInterval(calcDays, 1000);
 
-    // 2. 暖心语录列表
     const wordList = [
       "宝宝，你是我见过最温柔的女孩子～",
       "不管发生什么，我都会永远陪着你 ❤️",
@@ -160,7 +183,6 @@
       document.getElementById('wordList').innerHTML = `<p>${wordList[randomIndex]}</p>`;
     }
 
-    // 3. 惊喜弹窗
     function surprise() {
       alert(`❤️ 宝宝！\n我对你的爱，比天上的星星还多～\n这辈子只爱你一个人～`);
       const heart = document.createElement('div');
@@ -176,12 +198,11 @@
       setTimeout(() => heart.remove(), 3000);
     }
 
-    // 4. 加载照片墙（适配ML1-ML4.jpg）
+    // 加载照片墙（4张照片，双排并列展示）
     function loadPhotos() {
-      const photoCount = 4; // 照片数量（4张）
+      const photoCount = 4;
       let html = '';
       for (let i = 1; i <= photoCount; i++) {
-        // 拼接ML1.jpg/ML2.jpg...
         html += `
           <div class="photo-item">
             <img src="./ML${i}.jpg" alt="宝宝的美照${i}">
@@ -192,7 +213,6 @@
     }
     loadPhotos();
 
-    // 飘爱心动画
     const style = document.createElement('style');
     style.innerHTML = `
       @keyframes fall {
